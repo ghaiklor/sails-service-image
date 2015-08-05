@@ -1,0 +1,16 @@
+{
+  "name": "sails-service-image",
+  "version": "0.1.0",
+  "description": "Service for Sails framework with Image features",
+  "license": "MIT",
+  "main": "index.js",
+  "author": "ghaiklor",
+  "scripts": {
+    "test": "istanbul cover _mocha"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "istanbul": "*",
+    "mocha": "*"
+  }
+}
