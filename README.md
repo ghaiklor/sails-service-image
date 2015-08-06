@@ -6,6 +6,9 @@ Service for Sails framework with image features.
 
 ## List of supported image processors
 
+- GraphicsMagick
+- ImageMagick
+
 ## Getting Started
 
 Install this module.
