@@ -1,8 +1,24 @@
 var assert = require('chai').assert;
-var index = require('../../index');
+var ImageService = require('../../');
+var GraphicsMagick = ImageService.GraphicsMagick;
+var ImageMagick = ImageService.ImageMagick;
 
-describe('Entry Point', function () {
+describe('ImageService', function () {
   it('Should properly export', function () {
-    assert.isObject(index);
+    assert.isObject(ImageService);
+    assert.isFunction(ImageService.create);
+    assert.isFunction(ImageService.GraphicsMagick);
+    assert.isFunction(ImageService.ImageMagick);
+  });
+
+  it('Should properly create image instances', function () {
+    assert.instanceOf(ImageService.create('gm'), GraphicsMagick);
+    assert.instanceOf(ImageService.create('im'), ImageMagick);
+  });
+
+  it('Should properly throw error on unrecognized type', function () {
+    assert.throws(function () {
+      ImageService.create('NOT_EXISTS');
+    }, Error);
   });
 });
