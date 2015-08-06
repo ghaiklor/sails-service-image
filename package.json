@@ -12,5 +12,21 @@
     "chai": "*",
     "istanbul": "*",
     "mocha": "*"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghaiklor/sails-service-image.git"
+  },
+  "keywords": [
+    "sails",
+    "service",
+    "image"
+  ],
+  "bugs": {
+    "url": "https://github.com/ghaiklor/sails-service-image/issues"
+  },
+  "homepage": "https://github.com/ghaiklor/sails-service-image#readme"
 }
