@@ -28,30 +28,146 @@ That's it, you can create image instances for your needs in your project.
 
 ```javascript
 // api/controllers/ImageController.js
-var gm = ImageService.create('gm', {
-  provider: {}
-});
+var gm = ImageService.create('gm');
 
 module.exports = {
   crop: function(req, res) {
     gm
-      .crop('<SOURCE_IMAGE>')
+      .crop(req.param('file'), {
+        x: req.param('x'),
+        y: req.param('y'),
+        width: req.param('width'),
+        height: req.param('height')
+      })
+      .then(StorageService.upload)
       .then(res.ok)
       .catch(res.serverError);
   }
 };
 ```
 
-## Configuration
-
-When you instantiate image service `ImageService.create(type, config)` you can pass `provider` object.
-And all other free space you can use for your needs.
-
-`config.provider` - {Object} Configuration object for image provider
-
 ## API
 
+Each of image instances has following methods:
+
+### iptc(image)
+
+Get IPTC information from image. Returns Promise.
+
+`image` - {String|Buffer|Stream} From what image you want to get IPTC information.
+
+### resize(image, [config])
+
+Resize image and get buffer. Returns Promise.
+
+`image` - {String|Buffer|Stream} What image you want to resize.
+
+`config` - {Object}
+
+  - `config.width` - {Number|String} Resulting width of image
+  - `config.height` - {Number|String} Resulting height of image
+  - `config.direction` - {String} In what direction make the resize (see GM docs)
+  - `config.format` - {String} Resulting image format
+
+### crop(image, [config])
+
+Crop image and get buffer. Returns Promise.
+
+`image` - {String|Buffer|Stream} What image you want to crop.
+
+`config` - {Object}
+
+  - `config.width` - {Number|String} Resulting width of image
+  - `config.height` - {Number|String} Resulting height of image
+  - `config.x` - {Number} Start X coordinate for cropping
+  - `config.y` - {Number} Start Y coordinate for cropping
+  - `config.format` - {String} Resulting image format
+
+### thumbnail(image)
+
+Just shortcut for `crop` and `resize` with predefined options. Creates thumbnail for image and returns Promise.
+
+`image` - {String|Buffer|Stream} For what image you want to create thumbnail.
+
 ## Examples
+
+### GraphicsMagick
+
+```javascript
+var gm = ImageService.create('gm');
+
+// Get IPTC information from image
+gm
+  .iptc('my-image.jpg')
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console));
+
+// Resize image
+gm
+  .resize('my-image.jpg', {
+    width: '50%'
+  })
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+
+// Crop image
+gm
+  .crop('my-image.jpg', {
+    x: 100,
+    y: 50,
+    width: 200
+  })
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+
+// Create thumbnail
+gm
+  .thumbnail('my-image.jpg')
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+```
+
+### ImageMagick
+
+```javascript
+var im = ImageService.create('im');
+
+// Get IPTC information from image
+im
+  .iptc('my-image.jpg')
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console));
+
+// Resize image
+im
+  .resize('my-image.jpg', {
+    width: '50%'
+  })
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+
+// Crop image
+im
+  .crop('my-image.jpg', {
+    x: 100,
+    y: 50,
+    width: 200
+  })
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+
+// Create thumbnail
+im
+  .thumbnail('my-image.jpg')
+  .then(StorageService.upload)
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console))
+```
 
 ## License
 
