@@ -8,6 +8,10 @@ describe('BaseImage', function () {
     assert.isFunction(BaseImage.prototype.set);
     assert.isFunction(BaseImage.prototype.getProvider);
     assert.isFunction(BaseImage.prototype.setProvider);
+    assert.isFunction(BaseImage.prototype.iptc);
+    assert.isFunction(BaseImage.prototype.resize);
+    assert.isFunction(BaseImage.prototype.crop);
+    assert.isFunction(BaseImage.prototype.thumbnail);
   });
 
   it('Should properly make objects configurable', function () {
