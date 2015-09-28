@@ -126,6 +126,6 @@ export default class GraphicsMagick extends BaseImage {
    * @returns {Promise}
    */
   thumbnail(image, _config) {
-    this.resize(image, _config);
+    return this.resize(image, _config);
   }
 }
