@@ -1,59 +1,48 @@
-var _ = require('lodash');
+import _ from 'lodash';
 
-/**
- * Create base instance for image service
- * @param {Object} [_config]
- * @constructor
- */
-function BaseImage(_config) {
-  this._config = {};
+export default class BaseImage {
+  constructor(_config) {
+    this._config = {};
+    this._provider = {};
 
-  _.forOwn(_config, function (value, key) {
-    this.set(key, value);
-  }.bind(this));
+    _.assign(this._config, _config);
+  }
+
+  /**
+   * Get configuration value
+   * @param {String} [path]
+   * @returns {*}
+   */
+  get(path) {
+    return typeof path === 'undefined' ? this._config : _.get(this._config, path);
+  }
+
+  /**
+   * Set configuration value
+   * @param {String} path
+   * @param {*} value
+   * @returns {BaseImage}
+   */
+  set(path, value) {
+    _.set(this._config, path, value);
+    return this;
+  }
+
+  /**
+   * Get image provider
+   * @returns {*}
+   */
+  getProvider() {
+    return this._provider;
+  }
+
+  /**
+   * Set new provider
+   * @param {*} provider
+   * @returns {BaseImage}
+   */
+  setProvider(provider) {
+    this._provider = provider;
+    return this;
+  }
 }
-
-/**
- * Get configuration value
- * @param {String} [path]
- * @returns {*}
- */
-BaseImage.prototype.get = function (path) {
-  return typeof path === 'undefined' ? this._config : _.get(this._config, path);
-};
-
-/**
- * Set configuration value
- * @param {String} path
- * @param {*} value
- * @returns {BaseImage}
- */
-BaseImage.prototype.set = function (path, value) {
-  _.set(this._config, path, value);
-  return this;
-};
-
-/**
- * Get image provider
- * @returns {*}
- */
-BaseImage.prototype.getProvider = function () {
-  return this._provider;
-};
-
-/**
- * Set new provider
- * @param {*} provider
- * @returns {BaseImage}
- */
-BaseImage.prototype.setProvider = function (provider) {
-  this._provider = provider;
-  return this;
-};
-
-BaseImage.prototype.iptc = _;
-BaseImage.prototype.resize = _;
-BaseImage.prototype.crop = _;
-BaseImage.prototype.thumbnail = _;
-
-module.exports = BaseImage;
