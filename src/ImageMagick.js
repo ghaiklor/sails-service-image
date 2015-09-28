@@ -76,9 +76,13 @@ export default class GraphicsMagick extends BaseImage {
       this.getKeywords(image),
       this.getCategory(image),
       this.getFormat(image)
-    ]).spread((title, description, keywords, category, format) => {
-      Promise.resolve({title, description, keywords, category, format});
-    });
+    ]).spread((title, description, keywords, category, format) => Promise.resolve({
+      title,
+      description,
+      keywords,
+      category,
+      format
+    }));
   }
 
   /**
