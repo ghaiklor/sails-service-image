@@ -1,23 +1,21 @@
-var images = {
-  gm: require('./GraphicsMagick'),
-  im: require('./ImageMagick')
+import GraphicsMagick from './GraphicsMagick';
+import ImageMagick from './ImageMagick';
+
+var image = {
+  gm: GraphicsMagick,
+  im: ImageMagick
 };
 
-module.exports = {
-  /**
-   * Create specified images instance
-   * @param {String} type
-   * @param {Object} config
-   * @returns {*}
-   */
-  create: function (type, config) {
-    if (images[type.toLowerCase()] instanceof Function) {
-      return new images[type.toLowerCase()](config);
-    } else {
-      throw new Error('Unrecognized type -> ' + type);
-    }
-  },
-
-  GraphicsMagick: images.gm,
-  ImageMagick: images.im
-};
+/**
+ * Create specified images instance
+ * @param {String} type
+ * @param {Object} config
+ * @returns {*}
+ */
+export default function (type, config) {
+  if (image[type.toLowerCase()] instanceof Function) {
+    return new image[type.toLowerCase()](config);
+  } else {
+    throw new Error('Unrecognized type -> ' + type);
+  }
+}
