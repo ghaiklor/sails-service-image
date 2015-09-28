@@ -1,21 +1,21 @@
-var path = require('path');
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var GraphicsMagick = require('../../lib/GraphicsMagick');
+import { assert } from 'chai';
+import path from 'path';
+import sinon from 'sinon';
+import GraphicsMagick from '../../src/GraphicsMagick';
 
-describe('GraphicsMagick', function () {
-  it('Should properly export', function () {
+describe('GraphicsMagick', () => {
+  it('Should properly export', () => {
     assert.isFunction(GraphicsMagick);
   });
 
-  it('Should properly get IPTC information', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly get IPTC information', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'identify');
 
     gm
       .iptc(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (iptc) {
+      .then(iptc => {
         assert.equal(gm.getProvider().prototype.identify.callCount, 5);
         assert.equal(gm.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
         assert.equal(gm.getProvider().prototype.identify.getCall(1).args[0], '%[IPTC:2:120]');
@@ -37,17 +37,15 @@ describe('GraphicsMagick', function () {
       .catch(done);
   });
 
-  it('Should properly reject on getting IPTC information', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly reject on getting IPTC information', done => {
+    let gm = new GraphicsMagick();
 
-    sinon.stub(gm.getProvider().prototype, 'identify', function (section, cb) {
-      return section instanceof Function ? section('ERROR') : cb('ERROR');
-    });
+    sinon.stub(gm.getProvider().prototype, 'identify', (section, cb) => section instanceof Function ? section('ERROR') : cb('ERROR'));
 
     gm
       .iptc(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
         assert.equal(gm.getProvider().prototype.identify.callCount, 5);
         assert.equal(gm.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
@@ -62,14 +60,14 @@ describe('GraphicsMagick', function () {
       });
   });
 
-  it('Should properly resize image with default options', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly resize image with default options', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'resize');
 
     gm
       .resize(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
         assert.ok(gm.getProvider().prototype.resize.calledOnce);
         assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
@@ -83,8 +81,8 @@ describe('GraphicsMagick', function () {
       .catch(done);
   });
 
-  it('Should properly resize image with custom options', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly resize image with custom options', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'resize');
 
@@ -95,7 +93,7 @@ describe('GraphicsMagick', function () {
         direction: '<',
         format: 'png'
       })
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
         assert.ok(gm.getProvider().prototype.resize.calledOnce);
         assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 100);
@@ -109,18 +107,16 @@ describe('GraphicsMagick', function () {
       .catch(done);
   });
 
-  it('Should properly reject on resize image', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly reject on resize image', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'resize');
-    sinon.stub(gm.getProvider().prototype, 'toBuffer', function (cb) {
-      cb('ERROR');
-    });
+    sinon.stub(gm.getProvider().prototype, 'toBuffer', cb => cb('ERROR'));
 
     gm
       .resize(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
         assert.ok(gm.getProvider().prototype.resize.calledOnce);
         assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
@@ -134,14 +130,14 @@ describe('GraphicsMagick', function () {
       });
   });
 
-  it('Should properly crop image with default options', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly crop image with default options', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'crop');
 
     gm
       .crop(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
         assert.ok(gm.getProvider().prototype.crop.calledOnce);
         assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], '100%');
@@ -156,8 +152,8 @@ describe('GraphicsMagick', function () {
       .catch(done);
   });
 
-  it('Should properly crop image with custom options', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly crop image with custom options', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'crop');
 
@@ -169,7 +165,7 @@ describe('GraphicsMagick', function () {
         y: 200,
         format: 'png'
       })
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
         assert.ok(gm.getProvider().prototype.crop.calledOnce);
         assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], 100);
@@ -184,18 +180,16 @@ describe('GraphicsMagick', function () {
       .catch(done);
   });
 
-  it('Should properly reject on crop image', function (done) {
-    var gm = new GraphicsMagick();
+  it('Should properly reject on crop image', done => {
+    let gm = new GraphicsMagick();
 
     sinon.spy(gm.getProvider().prototype, 'crop');
-    sinon.stub(gm.getProvider().prototype, 'toBuffer', function (cb) {
-      cb('ERROR');
-    });
+    sinon.stub(gm.getProvider().prototype, 'toBuffer', cb => cb('ERROR'));
 
     gm
       .crop(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
         assert.ok(gm.getProvider().prototype.crop.calledOnce);
         assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], '100%');

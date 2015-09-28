@@ -1,27 +1,27 @@
-var path = require('path');
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var ImageMagick = require('../../lib/ImageMagick');
+import { assert } from 'chai';
+import path from 'path';
+import sinon from 'sinon';
+import ImageMagick from '../../src/ImageMagick';
 
-describe('ImageMagick', function () {
-  it('Should properly export', function () {
+describe('ImageMagick', () => {
+  it('Should properly export', () => {
     assert.isFunction(ImageMagick);
   });
 
-  it('Should properly get IPTC information', function (done) {
-    var im = new ImageMagick();
+  it('Should properly get IPTC information', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'identify');
+    sinon.spy(gm.getProvider().prototype, 'identify');
 
-    im
+    gm
       .iptc(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (iptc) {
-        assert.equal(im.getProvider().prototype.identify.callCount, 5);
-        assert.equal(im.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
-        assert.equal(im.getProvider().prototype.identify.getCall(1).args[0], '%[IPTC:2:120]');
-        assert.equal(im.getProvider().prototype.identify.getCall(2).args[0], '%[IPTC:2:25]');
-        assert.equal(im.getProvider().prototype.identify.getCall(3).args[0], '%[IPTC:2:15]');
-        assert.isFunction(im.getProvider().prototype.identify.getCall(4).args[0]);
+      .then(iptc => {
+        assert.equal(gm.getProvider().prototype.identify.callCount, 5);
+        assert.equal(gm.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(1).args[0], '%[IPTC:2:120]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(2).args[0], '%[IPTC:2:25]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(3).args[0], '%[IPTC:2:15]');
+        assert.isFunction(gm.getProvider().prototype.identify.getCall(4).args[0]);
         assert.deepEqual(iptc, {
           title: '',
           description: '',
@@ -30,138 +30,134 @@ describe('ImageMagick', function () {
           format: 'JPEG'
         });
 
-        im.getProvider().prototype.identify.restore();
+        gm.getProvider().prototype.identify.restore();
 
         done();
       })
       .catch(done);
   });
 
-  it('Should properly reject on getting IPTC information', function (done) {
-    var im = new ImageMagick();
+  it('Should properly reject on getting IPTC information', done => {
+    let gm = new ImageMagick();
 
-    sinon.stub(im.getProvider().prototype, 'identify', function (section, cb) {
-      return section instanceof Function ? section('ERROR') : cb('ERROR');
-    });
+    sinon.stub(gm.getProvider().prototype, 'identify', (section, cb) => section instanceof Function ? section('ERROR') : cb('ERROR'));
 
-    im
+    gm
       .iptc(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
-        assert.equal(im.getProvider().prototype.identify.callCount, 5);
-        assert.equal(im.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
-        assert.equal(im.getProvider().prototype.identify.getCall(1).args[0], '%[IPTC:2:120]');
-        assert.equal(im.getProvider().prototype.identify.getCall(2).args[0], '%[IPTC:2:25]');
-        assert.equal(im.getProvider().prototype.identify.getCall(3).args[0], '%[IPTC:2:15]');
-        assert.isFunction(im.getProvider().prototype.identify.getCall(4).args[0]);
+        assert.equal(gm.getProvider().prototype.identify.callCount, 5);
+        assert.equal(gm.getProvider().prototype.identify.getCall(0).args[0], '%[IPTC:2:05]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(1).args[0], '%[IPTC:2:120]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(2).args[0], '%[IPTC:2:25]');
+        assert.equal(gm.getProvider().prototype.identify.getCall(3).args[0], '%[IPTC:2:15]');
+        assert.isFunction(gm.getProvider().prototype.identify.getCall(4).args[0]);
 
-        im.getProvider().prototype.identify.restore();
+        gm.getProvider().prototype.identify.restore();
 
         done();
       });
   });
 
-  it('Should properly resize image with default options', function (done) {
-    var im = new ImageMagick();
+  it('Should properly resize image with default options', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'resize');
+    sinon.spy(gm.getProvider().prototype, 'resize');
 
-    im
+    gm
       .resize(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
-        assert.ok(im.getProvider().prototype.resize.calledOnce);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[0], 200);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[1], undefined);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[2], '>');
+        assert.ok(gm.getProvider().prototype.resize.calledOnce);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[1], undefined);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[2], '>');
 
-        im.getProvider().prototype.resize.restore();
+        gm.getProvider().prototype.resize.restore();
 
         done();
       })
       .catch(done);
   });
 
-  it('Should properly resize image with custom options', function (done) {
-    var im = new ImageMagick();
+  it('Should properly resize image with custom options', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'resize');
+    sinon.spy(gm.getProvider().prototype, 'resize');
 
-    im
+    gm
       .resize(path.resolve(__dirname, '../fixtures/thailand.jpg'), {
         width: 100,
         height: 100,
         direction: '<',
         format: 'png'
       })
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
-        assert.ok(im.getProvider().prototype.resize.calledOnce);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[0], 100);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[1], 100);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[2], '<');
+        assert.ok(gm.getProvider().prototype.resize.calledOnce);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 100);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[1], 100);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[2], '<');
 
-        im.getProvider().prototype.resize.restore();
+        gm.getProvider().prototype.resize.restore();
 
         done();
       })
       .catch(done);
   });
 
-  it('Should properly reject on resize image', function (done) {
-    var im = new ImageMagick();
+  it('Should properly reject on resize image', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'resize');
-    sinon.stub(im.getProvider().prototype, 'toBuffer', function (cb) {
-      cb('ERROR');
-    });
+    sinon.spy(gm.getProvider().prototype, 'resize');
+    sinon.stub(gm.getProvider().prototype, 'toBuffer', cb => cb('ERROR'));
 
-    im
+    gm
       .resize(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
-        assert.ok(im.getProvider().prototype.resize.calledOnce);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[0], 200);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[1], undefined);
-        assert.equal(im.getProvider().prototype.resize.getCall(0).args[2], '>');
+        assert.ok(gm.getProvider().prototype.resize.calledOnce);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[1], undefined);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[2], '>');
 
-        im.getProvider().prototype.resize.restore();
-        im.getProvider().prototype.toBuffer.restore();
+        gm.getProvider().prototype.resize.restore();
+        gm.getProvider().prototype.toBuffer.restore();
 
         done();
       });
   });
 
-  it('Should properly crop image with default options', function (done) {
-    var im = new ImageMagick();
+  it('Should properly crop image with default options', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'crop');
+    sinon.spy(gm.getProvider().prototype, 'crop');
 
-    im
+    gm
       .crop(path.resolve(__dirname, '../fixtures/thailand.jpg'))
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
-        assert.ok(im.getProvider().prototype.crop.calledOnce);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[0], '100%');
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[1], '100%');
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[2], 0);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[3], 0);
+        assert.ok(gm.getProvider().prototype.crop.calledOnce);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], '100%');
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[1], '100%');
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[2], 0);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[3], 0);
 
-        im.getProvider().prototype.crop.restore();
+        gm.getProvider().prototype.crop.restore();
 
         done();
       })
       .catch(done);
   });
 
-  it('Should properly crop image with custom options', function (done) {
-    var im = new ImageMagick();
+  it('Should properly crop image with custom options', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'crop');
+    sinon.spy(gm.getProvider().prototype, 'crop');
 
-    im
+    gm
       .crop(path.resolve(__dirname, '../fixtures/thailand.jpg'), {
         width: 100,
         height: 100,
@@ -169,42 +165,40 @@ describe('ImageMagick', function () {
         y: 200,
         format: 'png'
       })
-      .then(function (result) {
+      .then(result => {
         assert.instanceOf(result, Buffer);
-        assert.ok(im.getProvider().prototype.crop.calledOnce);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[0], 100);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[1], 100);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[2], 200);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[3], 200);
+        assert.ok(gm.getProvider().prototype.crop.calledOnce);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], 100);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[1], 100);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[2], 200);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[3], 200);
 
-        im.getProvider().prototype.crop.restore();
+        gm.getProvider().prototype.crop.restore();
 
         done();
       })
       .catch(done);
   });
 
-  it('Should properly reject on crop image', function (done) {
-    var im = new ImageMagick();
+  it('Should properly reject on crop image', done => {
+    let gm = new ImageMagick();
 
-    sinon.spy(im.getProvider().prototype, 'crop');
-    sinon.stub(im.getProvider().prototype, 'toBuffer', function (cb) {
-      cb('ERROR');
-    });
+    sinon.spy(gm.getProvider().prototype, 'crop');
+    sinon.stub(gm.getProvider().prototype, 'toBuffer', cb => cb('ERROR'));
 
-    im
+    gm
       .crop(path.resolve(__dirname, '../fixtures/thailand.jpg'))
       .then(done)
-      .catch(function (error) {
+      .catch(error => {
         assert.equal(error, 'ERROR');
-        assert.ok(im.getProvider().prototype.crop.calledOnce);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[0], '100%');
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[1], '100%');
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[2], 0);
-        assert.equal(im.getProvider().prototype.crop.getCall(0).args[3], 0);
+        assert.ok(gm.getProvider().prototype.crop.calledOnce);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[0], '100%');
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[1], '100%');
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[2], 0);
+        assert.equal(gm.getProvider().prototype.crop.getCall(0).args[3], 0);
 
-        im.getProvider().prototype.crop.restore();
-        im.getProvider().prototype.toBuffer.restore();
+        gm.getProvider().prototype.crop.restore();
+        gm.getProvider().prototype.toBuffer.restore();
 
         done();
       });

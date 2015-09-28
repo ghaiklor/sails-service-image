@@ -1,21 +1,13 @@
-var assert = require('chai').assert;
-var BaseImage = require('../../lib/BaseImage');
+import { assert } from 'chai';
+import BaseImage from '../../src/BaseImage';
 
-describe('BaseImage', function () {
-  it('Should properly export', function () {
+describe('BaseImage', () => {
+  it('Should properly export', () => {
     assert.isFunction(BaseImage);
-    assert.isFunction(BaseImage.prototype.get);
-    assert.isFunction(BaseImage.prototype.set);
-    assert.isFunction(BaseImage.prototype.getProvider);
-    assert.isFunction(BaseImage.prototype.setProvider);
-    assert.isFunction(BaseImage.prototype.iptc);
-    assert.isFunction(BaseImage.prototype.resize);
-    assert.isFunction(BaseImage.prototype.crop);
-    assert.isFunction(BaseImage.prototype.thumbnail);
   });
 
-  it('Should properly make objects configurable', function () {
-    var image = new BaseImage();
+  it('Should properly make objects configurable', () => {
+    let image = new BaseImage();
 
     assert.notOk(image.get('foo'));
     assert.instanceOf(image.set('foo', 'bar'), BaseImage);
@@ -26,8 +18,8 @@ describe('BaseImage', function () {
     assert.equal(image.get('foo'), 'bar');
   });
 
-  it('Should properly create image with pre-defined config', function () {
-    var image = new BaseImage({
+  it('Should properly create image with pre-defined config', () => {
+    let image = new BaseImage({
       foo: 'bar',
       obj: {
         foo: 'bar'
@@ -40,10 +32,10 @@ describe('BaseImage', function () {
     assert.notOk(image.get('NOT_EXISTS'));
   });
 
-  it('Should properly get/set provider', function () {
-    var image = new BaseImage();
+  it('Should properly get/set provider', () => {
+    let image = new BaseImage();
 
-    assert.notOk(image.getProvider());
+    assert.deepEqual(image.getProvider(), {});
     assert.instanceOf(image.setProvider('PROVIDER'), BaseImage);
     assert.equal(image.getProvider(), 'PROVIDER');
   });
