@@ -1,6 +1,13 @@
 # sails-service-image
 
-![Build Status](https://img.shields.io/travis/ghaiklor/sails-service-image.svg) ![Coverage](https://img.shields.io/coveralls/ghaiklor/sails-service-image.svg) ![Downloads](https://img.shields.io/npm/dm/sails-service-image.svg) ![npm version](https://img.shields.io/npm/v/sails-service-image.svg) ![dependencies](https://img.shields.io/david/ghaiklor/sails-service-image.svg) ![dev dependencies](https://img.shields.io/david/dev/ghaiklor/sails-service-image.svg) ![License](https://img.shields.io/npm/l/sails-service-image.svg)
+![Build Status](https://img.shields.io/travis/ghaiklor/sails-service-image.svg)
+![Coverage](https://img.shields.io/coveralls/ghaiklor/sails-service-image.svg)
+![Downloads](https://img.shields.io/npm/dm/sails-service-image.svg)
+![Downloads](https://img.shields.io/npm/dt/sails-service-image.svg)
+![npm version](https://img.shields.io/npm/v/sails-service-image.svg)
+![dependencies](https://img.shields.io/david/ghaiklor/sails-service-image.svg)
+![dev dependencies](https://img.shields.io/david/dev/ghaiklor/sails-service-image.svg)
+![License](https://img.shields.io/npm/l/sails-service-image.svg)
 
 Service for Sails framework with image features.
 
@@ -17,22 +24,18 @@ Install this module.
 npm install sails-service-image
 ```
 
-Then require it in your service.
+Then require it in your service and create image instance.
 
 ```javascript
 // api/services/ImageService.js
-module.exports = require('sails-service-image');
-```
+import ImageService from 'sails-service-image';
 
-That's it, you can create image instances for your needs in your project.
+export default ImageService('gm');
 
-```javascript
 // api/controllers/ImageController.js
-var gm = ImageService.create('gm');
-
-module.exports = {
+export default {
   crop: function(req, res) {
-    gm
+    ImageService
       .crop(req.param('file'), {
         x: req.param('x'),
         y: req.param('y'),
@@ -41,7 +44,7 @@ module.exports = {
       })
       .then(StorageService.upload)
       .then(res.ok)
-      .catch(res.serverError);
+      .catch(res.negotiate);
   }
 };
 ```
@@ -94,7 +97,7 @@ Just shortcut for `crop` and `resize` with predefined options. Creates thumbnail
 ### GraphicsMagick
 
 ```javascript
-var gm = ImageService.create('gm');
+let gm = ImageService('gm');
 
 // Get IPTC information from image
 gm
@@ -133,7 +136,7 @@ gm
 ### ImageMagick
 
 ```javascript
-var im = ImageService.create('im');
+let im = ImageService.create('im');
 
 // Get IPTC information from image
 im
