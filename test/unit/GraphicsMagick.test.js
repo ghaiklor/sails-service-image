@@ -203,4 +203,48 @@ describe('GraphicsMagick', () => {
         done();
       });
   });
+
+  it('Should properly create thumbnail', done => {
+    let gm = new GraphicsMagick();
+
+    sinon.spy(gm.getProvider().prototype, 'resize');
+
+    gm
+      .thumbnail(path.resolve(__dirname, '../fixtures/thailand.jpg'))
+      .then(result => {
+        assert.instanceOf(result, Buffer);
+        assert.ok(gm.getProvider().prototype.resize.calledOnce);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[1], undefined);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[2], '>');
+
+        gm.getProvider().prototype.resize.restore();
+
+        done();
+      })
+      .catch(done);
+  });
+
+  it('Should properly reject on creating thumbnail', done => {
+    let gm = new GraphicsMagick();
+
+    sinon.spy(gm.getProvider().prototype, 'resize');
+    sinon.stub(gm.getProvider().prototype, 'toBuffer', cb => cb('ERROR'));
+
+    gm
+      .thumbnail(path.resolve(__dirname, '../fixtures/thailand.jpg'))
+      .then(done)
+      .catch(error => {
+        assert.equal(error, 'ERROR');
+        assert.ok(gm.getProvider().prototype.resize.calledOnce);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[0], 200);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[1], undefined);
+        assert.equal(gm.getProvider().prototype.resize.getCall(0).args[2], '>');
+
+        gm.getProvider().prototype.resize.restore();
+        gm.getProvider().prototype.toBuffer.restore();
+
+        done();
+      });
+  });
 });
