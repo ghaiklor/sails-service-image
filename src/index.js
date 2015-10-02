@@ -1,7 +1,7 @@
 import GraphicsMagick from './GraphicsMagick';
 import ImageMagick from './ImageMagick';
 
-var image = {
+const image = {
   gm: GraphicsMagick,
   im: ImageMagick
 };
