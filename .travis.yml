@@ -1,5 +1,10 @@
 sudo: false
 language: node_js
+addons:
+  apt:
+    packages:
+    - graphicsmagick
+    - imagemagick
 cache:
   directories:
     - node_modules
