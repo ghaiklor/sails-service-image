@@ -3,8 +3,8 @@ import Promise from 'bluebird';
 import BaseImage from './BaseImage';
 
 export default class GraphicsMagick extends BaseImage {
-  constructor(...args) {
-    super(...args);
+  constructor(config) {
+    super(config);
 
     this.setProvider(gm.subClass({imageMagick: true}));
   }
