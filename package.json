@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "bluebird": "3.3.4",
-    "gm": "1.21.1",
+    "gm": "1.22.0",
     "lodash": "4.8.2"
   },
   "devDependencies": {
