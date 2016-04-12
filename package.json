@@ -26,7 +26,7 @@
     "url": "https://github.com/ghaiklor/sails-service-image/issues"
   },
   "dependencies": {
-    "bluebird": "3.3.4",
+    "bluebird": "3.3.5",
     "gm": "1.22.0",
     "lodash": "4.9.0"
   },
