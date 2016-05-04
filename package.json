@@ -28,7 +28,7 @@
   "dependencies": {
     "bluebird": "3.3.5",
     "gm": "1.22.0",
-    "lodash": "4.11.1"
+    "lodash": "4.11.2"
   },
   "devDependencies": {
     "babel-cli": "6.8.0",
